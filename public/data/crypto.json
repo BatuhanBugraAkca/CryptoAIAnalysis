@@ -1,23 +1,16 @@
 {
-  "success": true,
   "data": {
     "bitcoin": {
-      "price": 42000,
+      "price": 43250.65,
       "change24h": 2.5,
-      "marketCap": "825B",
-      "volume24h": "25B"
+      "marketCap": "$840B",
+      "volume": "$28.5B"
     },
     "ethereum": {
-      "price": 2200,
-      "change24h": 1.8,
-      "marketCap": "265B",
-      "volume24h": "12B"
-    },
-    "marketStats": {
-      "totalMarketCap": "1.5T",
-      "totalVolume24h": "85B",
-      "btcDominance": "45%",
-      "activeCoins": 2000
+      "price": 2280.30,
+      "change24h": 3.2,
+      "marketCap": "$274B",
+      "volume": "$15.2B"
     }
   }
 } 

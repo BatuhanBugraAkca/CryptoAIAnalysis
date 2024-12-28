@@ -1,84 +1,34 @@
 import { create } from 'zustand'
 
-interface AnalysisState {
-  selectedCoin: 'ETH' | 'BTC';
-  data: {
-    currentPrice: number;
-    volume24h: number;
-    elliott: any;
-    priceAction: any;
-    gann: any;
-    technical: {
-      indicators: {
-        movingAverages: { sma: number; ema: number };
-        rsi: number;
-        macd: { macd: number; signal: number; histogram: number };
-        bollingerBands: { upper: number; middle: number; lower: number };
-        stochastic: { K: number; D: number };
-      };
-      signals: {
-        trend: {
-          direction: 'UP' | 'DOWN' | 'NEUTRAL';
-          strength: number;
-          description: string;
-        };
-        momentum: {
-          status: 'OVERSOLD' | 'OVERBOUGHT' | 'NEUTRAL';
-          value: number;
-          signal: 'BUY' | 'SELL' | 'HOLD';
-        };
-        volatility: {
-          level: 'HIGH' | 'MEDIUM' | 'LOW';
-          value: number;
-          bandWidth: number;
-        };
-      };
-      summary: {
-        recommendation: 'STRONG_BUY' | 'BUY' | 'NEUTRAL' | 'SELL' | 'STRONG_SELL';
-        confidence: number;
-        nextTargets: {
-          support: number[];
-          resistance: number[];
-        };
-      };
-    };
-    timestamp: string;
-    lastUpdate: number;
-  } | null;
-  isLoading: boolean;
-  error: string | null;
-  setSelectedCoin: (coin: 'ETH' | 'BTC') => void;
-  fetchAnalysis: () => Promise<void>;
+interface CryptoData {
+  bitcoin: {
+    price: number
+    change24h: number
+    marketCap: string
+    volume: string
+  }
+  ethereum: {
+    price: number
+    change24h: number
+    marketCap: string
+    volume: string
+  }
 }
 
-export const useAnalysisStore = create<AnalysisState>((set, get) => ({
-  selectedCoin: 'ETH',
-  data: null,
-  isLoading: false,
+interface CryptoStore {
+  cryptoData: CryptoData | null
+  loading: boolean
+  error: string | null
+  setCryptoData: (data: CryptoData) => void
+  setLoading: (loading: boolean) => void
+  setError: (error: string | null) => void
+}
+
+export const useCryptoStore = create<CryptoStore>((set) => ({
+  cryptoData: null,
+  loading: false,
   error: null,
-  setSelectedCoin: async (coin) => {
-    set({ selectedCoin: coin, data: null });
-    await get().fetchAnalysis();
-  },
-  fetchAnalysis: async () => {
-    const coin = get().selectedCoin;
-    try {
-      set({ isLoading: true, error: null });
-      const response = await fetch(`/api/crypto/analysis?coin=${coin}`);
-      if (!response.ok) throw new Error('Veri çekilemedi');
-      
-      const data = await response.json();
-      set({ 
-        data: {
-          ...data,
-          lastUpdate: Date.now()
-        },
-        error: null 
-      });
-    } catch (error) {
-      set({ error: error instanceof Error ? error.message : 'Beklenmeyen hata' });
-    } finally {
-      set({ isLoading: false });
-    }
-  }
+  setCryptoData: (data) => set({ cryptoData: data }),
+  setLoading: (loading) => set({ loading }),
+  setError: (error) => set({ error })
 })) 

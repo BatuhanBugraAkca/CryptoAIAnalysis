@@ -1,25 +1,29 @@
 'use client'
-import { useAnalysisStore } from '@/lib/store'
+import React from 'react'
+import { useCryptoStore } from '@/lib/store'
 
 export default function TechnicalIndicators() {
-  const { data } = useAnalysisStore()
-  
-  if (!data?.indicators) return null
+  const { cryptoData, loading, error } = useCryptoStore()
 
-  const { movingAverages, rsi, macd, bollingerBands, stochastic } = data.indicators
+  if (loading) return <div>Yükleniyor...</div>
+  if (error) return <div>Hata: {error}</div>
+  if (!cryptoData) return null
 
   return (
-    <div className="bg-gray-900/60 rounded-xl p-6 backdrop-blur-sm border border-gray-600/30">
-      <h2 className="text-xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-purple-500 text-transparent bg-clip-text">
-        Temel Analiz
-      </h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {/* Her bir gösterge için */}
-        <div className="bg-gray-800/50 p-4 rounded-xl hover:bg-gray-800/70 transition-all">
-          {/* ... gösterge başlığı ... */}
-          <div className="font-mono text-xs sm:text-sm text-gray-400">
-            ${(value / 1000).toFixed(1)}K
-          </div>
+    <div className="p-4 bg-white rounded-lg shadow-md">
+      <h2 className="text-xl font-bold mb-4">Technical Indicators</h2>
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <h3 className="font-semibold">Bitcoin Indicators</h3>
+          <p>Price: ${cryptoData.bitcoin.price.toLocaleString()}</p>
+          <p>24h Change: {cryptoData.bitcoin.change24h}%</p>
+          <p>Market Cap: {cryptoData.bitcoin.marketCap}</p>
+        </div>
+        <div>
+          <h3 className="font-semibold">Ethereum Indicators</h3>
+          <p>Price: ${cryptoData.ethereum.price.toLocaleString()}</p>
+          <p>24h Change: {cryptoData.ethereum.change24h}%</p>
+          <p>Market Cap: {cryptoData.ethereum.marketCap}</p>
         </div>
       </div>
     </div>
